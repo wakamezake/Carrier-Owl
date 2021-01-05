@@ -16,6 +16,7 @@ chromedriver-binary = "87.*"
 arxiv = "^0.5.3"
 
 [tool.poetry.dev-dependencies]
+pytest = "^6.2.1"
 
 [build-system]
 requires = ["poetry>=0.12"]
