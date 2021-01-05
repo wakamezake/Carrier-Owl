@@ -24,16 +24,31 @@ class Result:
     score: float = 0.0
 
 
-def calc_score(abst: str, keywords: dict) -> (float, list):
-    sum_score = 0.0
+def calc_score(text: str, keyword_and_weight: dict) -> (float, list):
+    """Performs a forward match search on the target string and
+     returns the sum of the matched strings and weights.
+
+    Args:
+        text:
+            search for string
+        keyword_and_weight:
+            Weight per keyword
+    Returns:
+        Sum of the matched keywords and their corresponding weights
+    Example:
+        >>> _text = 'Hello, My name is Takashi'
+        >>> _keywords = {'Takashi': 3.0, 'Hello': 1.0}
+        >>> calc_score(_text, _keywords)
+        (4.0, ['Takashi', 'Hello'])
+    """
+    score = 0.0
     hit_kwd_list = []
 
-    for word in keywords.keys():
-        score = keywords[word]
-        if word.lower() in abst.lower():
-            sum_score += score
-            hit_kwd_list.append(word)
-    return sum_score, hit_kwd_list
+    for keyword, weight in keyword_and_weight.items():
+        if keyword.lower() in text.lower():
+            score += weight
+            hit_kwd_list.append(keyword)
+    return score, hit_kwd_list
 
 
 def search_keyword(
