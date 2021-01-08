@@ -54,6 +54,17 @@ def calc_score(text: str, keyword_and_weight: dict) -> (float, list):
 def search_keyword(
         articles: list, keywords: dict, score_threshold: float
         ) -> list:
+    """If there are keywords that match the abstract of the paper and the score is above the threshold,
+     it will translate the papers into the specified language and return them.
+
+    Args:
+        articles: Papers retrieved with arxiv api
+        keywords: Keywords and weights to match when searching for article abstracts
+        score_threshold: Weight threshold
+
+    Returns:
+       A list of Result classes that contain the abstract, URL, and title of the paper
+    """
     results = []
 
     for article in articles:
@@ -75,6 +86,13 @@ def search_keyword(
 
 
 def send2app(text: str, slack_id: str, line_token: str) -> None:
+    """Notify the prepared text to the linked app.
+
+    Args:
+        text: Text processed for notification
+        slack_id: ID for integration with slack
+        line_token: Access token for integration with line
+    """
     # slack
     if slack_id is not None:
         slack = slackweb.Slack(url=slack_id)
@@ -89,6 +107,13 @@ def send2app(text: str, slack_id: str, line_token: str) -> None:
 
 
 def notify(results: list, slack_id: str, line_token: str) -> None:
+    """Sort the papers in descending score order and prepare the paper text to notify the app.
+
+    Args:
+        results: Papers retrieved with arxiv api
+        slack_id: ID for integration with slack
+        line_token: Access token for integration with line
+    """
     # 通知
     star = '*'*80
     today = datetime.date.today()
@@ -115,10 +140,20 @@ def notify(results: list, slack_id: str, line_token: str) -> None:
 
 
 def get_translated_text(from_lang: str, to_lang: str, from_text: str) -> str:
-    '''
-    https://qiita.com/fujino-fpu/items/e94d4ff9e7a5784b2987
-    '''
+    """Use selenium and ChromeDriver to access DeepL and
+     translate text from English to Japanese.
 
+    Args:
+        from_lang: Original language (e.g. en)
+        to_lang: Language of the translation (e.g. ja)
+        from_text: text of the translation source
+
+    References:
+        https://qiita.com/fujino-fpu/items/e94d4ff9e7a5784b2987
+
+    Returns:
+        Translated text
+    """
     sleep_time = 1
 
     # urlencode
